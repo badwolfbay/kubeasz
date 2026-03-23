@@ -126,9 +126,13 @@
   - name: Setting master role name
     shell: "{{ base_dir }}/bin/kubectl label node {{ K8S_NODENAME }} kubernetes.io/role=master --overwrite"
     when: "inventory_hostname in groups['kube_master']"
+  
+  - name:  Setting master nodes SchedulingDisabled
+    shell: "{{ base_dir }}/bin/kubectl taint node {{ K8S_NODENAME }} kubernetes.io/role=master:NoSchedule"
+    when: "inventory_hostname in groups['kube_master']"
 
-  - name: Making master nodes SchedulingDisabled
-    shell: "{{ base_dir }}/bin/kubectl cordon {{ K8S_NODENAME }} "
-    when: "inventory_hostname not in groups['kube_node']"
+#  - name: Making master nodes SchedulingDisabled
+#    shell: "{{ base_dir }}/bin/kubectl cordon {{ K8S_NODENAME }} "
+#    when: "inventory_hostname not in groups['kube_node']"
   ignore_errors: true
   connection: local

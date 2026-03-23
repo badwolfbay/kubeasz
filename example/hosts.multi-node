@@ -37,6 +37,8 @@
 # --------- Main Variables ---------------
 # Secure port for apiservers
 SECURE_PORT="6443"
+ansible_user=
+ansible_password=
 
 # Cluster container-runtime supported: docker, containerd
 # if k8s version >= 1.24, docker is not supported
@@ -46,7 +48,7 @@ CONTAINER_RUNTIME="containerd"
 CLUSTER_NETWORK="calico"
 
 # Service proxy mode of kube-proxy: 'iptables' or 'ipvs'
-PROXY_MODE="ipvs"
+PROXY_MODE="iptables"
 
 # K8S Service CIDR, not overlap with node(host) networking
 SERVICE_CIDR="10.68.0.0/16"
