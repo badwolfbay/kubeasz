@@ -54,6 +54,7 @@ NODE_PORT_RANGE="30000-32767"
 
 # Cluster DNS Domain
 CLUSTER_DNS_DOMAIN="cluster.local"
+CLUSTER_DNS_FORWARD="114.114.114.114"
 
 # -------- Additional Variables (don't change the default value right now)---
 # Binaries Directory
