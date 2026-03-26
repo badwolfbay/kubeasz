@@ -1,0 +1,5 @@
+# 控制节点上 Docker 证书目录的路径（源）
+local_docker_certs_dir: "{{ DOCKER_CERTS_DIR }}"
+
+# 目标节点上 containerd 证书目录
+containerd_certs_dir: "/etc/containerd/certs.d"

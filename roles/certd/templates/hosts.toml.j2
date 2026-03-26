@@ -1,0 +1,13 @@
+{# roles/convert_docker_certs/templates/hosts.toml.j2 #}
+server = "{{ server_url }}"
+
+[host."{{ server_url }}"]
+  {% if has_ca %}
+  ca = "{{ ca_path }}"
+  {% endif %}
+  {% if has_client_cert %}
+  client_cert = "{{ client_cert_path }}"
+  {% endif %}
+  {% if has_client_key %}
+  client_key = "{{ client_key_path }}"
+  {% endif %}

@@ -1,0 +1,20 @@
+- name: Get list of registry directories from control node
+  ansible.builtin.find:
+    paths: "{{ local_docker_certs_dir }}"
+    file_type: directory
+    recurse: no
+  delegate_to: localhost
+  register: local_registry_dirs
+  run_once: true
+
+- name: Fail if no registry directories found
+  ansible.builtin.fail:
+    msg: "No registry directories found in {{ local_docker_certs_dir }} on control node"
+  when: local_registry_dirs.files | length == 0
+  run_once: true
+
+- name: Process each registry
+  include_tasks: process_registry.yml
+  loop: "{{ local_registry_dirs.files }}"
+  loop_control:
+    loop_var: registry_dir

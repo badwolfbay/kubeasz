@@ -1,0 +1,73 @@
+- name: Set registry_name
+  ansible.builtin.set_fact:
+    registry_name: "{{ registry_dir.path | basename }}"
+
+- name: Create containerd registry directory on target node
+  ansible.builtin.file:
+    path: "{{ containerd_certs_dir }}/{{ registry_name }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Check for CA certificate on control node
+  ansible.builtin.stat:
+    path: "{{ local_docker_certs_dir }}/{{ registry_name }}/ca.crt"
+  delegate_to: localhost
+  register: ca_stat
+
+- name: Copy CA certificate to target node (if exists)
+  ansible.builtin.copy:
+    src: "{{ local_docker_certs_dir }}/{{ registry_name }}/ca.crt"
+    dest: "{{ containerd_certs_dir }}/{{ registry_name }}/ca.crt"
+    owner: root
+    group: root
+    mode: '0644'
+  when: ca_stat.stat.exists
+
+- name: Check for client certificate on control node
+  ansible.builtin.stat:
+    path: "{{ local_docker_certs_dir }}/{{ registry_name }}/client.cert"
+  delegate_to: localhost
+  register: cert_stat
+
+- name: Copy client certificate to target node (if exists)
+  ansible.builtin.copy:
+    src: "{{ local_docker_certs_dir }}/{{ registry_name }}/client.cert"
+    dest: "{{ containerd_certs_dir }}/{{ registry_name }}/client.cert"
+    owner: root
+    group: root
+    mode: '0644'
+  when: cert_stat.stat.exists
+
+- name: Check for client key on control node
+  ansible.builtin.stat:
+    path: "{{ local_docker_certs_dir }}/{{ registry_name }}/client.key"
+  delegate_to: localhost
+  register: key_stat
+
+- name: Copy client key to target node (if exists)
+  ansible.builtin.copy:
+    src: "{{ local_docker_certs_dir }}/{{ registry_name }}/client.key"
+    dest: "{{ containerd_certs_dir }}/{{ registry_name }}/client.key"
+    owner: root
+    group: root
+    mode: '0600'
+  when: key_stat.stat.exists
+
+- name: Generate hosts.toml on target node
+  ansible.builtin.template:
+    src: hosts.toml.j2
+    dest: "{{ containerd_certs_dir }}/{{ registry_name }}/hosts.toml"
+    owner: root
+    group: root
+    mode: '0644'
+  vars:
+    registry: "{{ registry_name }}"
+    ca_path: "{{ containerd_certs_dir }}/{{ registry_name }}/ca.crt"
+    client_cert_path: "{{ containerd_certs_dir }}/{{ registry_name }}/client.cert"
+    client_key_path: "{{ containerd_certs_dir }}/{{ registry_name }}/client.key"
+    has_ca: "{{ ca_stat.stat.exists }}"
+    has_client_cert: "{{ cert_stat.stat.exists }}"
+    has_client_key: "{{ key_stat.stat.exists }}"
+    server_url: "https://{{ registry_name }}"

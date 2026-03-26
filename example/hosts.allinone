@@ -32,6 +32,11 @@
 # --------- Main Variables ---------------
 # Secure port for apiservers
 SECURE_PORT="6443"
+ansible_user=
+ansible_password=
+
+# docker cert.d location
+DOCKER_CERTS_DIR="/etc/docker/certs.d"
 
 # Cluster container-runtime supported: docker, containerd
 # if k8s version >= 1.24, docker is not supported

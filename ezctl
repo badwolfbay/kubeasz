@@ -339,6 +339,11 @@ function add-node() {
     ansible-playbook -i "$BASE/clusters/$1/hosts" "$BASE/playbooks/22.addnode.yml" -e "NODE_TO_ADD=$2" -e "@clusters/$1/config.yml"
 }
 
+function cert-convert() {
+    logger info "start to convert and copy cert "
+    ansible-playbook -i "$BASE/clusters/$1/hosts" "$BASE/playbooks/24.certconvert.yml"
+}
+
 function add-master() {
     # check new master's address regexp
     [[ $2 =~ ^(2(5[0-5]{1}|[0-4][0-9]{1})|[0-1]?[0-9]{1,2})(\.(2(5[0-5]{1}|[0-4][0-9]{1})|[0-1]?[0-9]{1,2})){3}$ ]] || { logger error  "Invalid ip add:$2"; return 1; }
@@ -601,6 +606,10 @@ function main() {
           [ "$#" -gt 2 ] || { usage >&2; exit 2; }
           add-node "${@:2}"
           ;;
+      (cert-convert)
+          [ "$#" -eq 2 ] || { usage >&2; exit 2; }
+          cert-convert "$2"      
+          ;;            
       (del-etcd)
           [ "$#" -eq 3 ] || { usage >&2; exit 2; }
           del-etcd "$2" "$3"

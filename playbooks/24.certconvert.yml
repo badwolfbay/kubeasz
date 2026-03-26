@@ -1,0 +1,4 @@
+# to convert and cp docker cert.d file to containerd in 'kube_node' nodes
+- hosts: kube_node
+  roles:
+  - certd
