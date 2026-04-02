@@ -180,6 +180,12 @@ spec:
           name: tmp-dir
       nodeSelector:
         kubernetes.io/os: linux
+        kubernetes.io/role: master
+      tolerations:
+        - key: "kubernetes.io/role"
+          value: "master"
+          operator: "Equal"
+          effect: NoSchedule         
       priorityClassName: system-cluster-critical
       serviceAccountName: metrics-server
       volumes:

@@ -74,9 +74,7 @@ data:
             ttl 30
         }
         prometheus :9153
-        forward . /etc/resolv.conf {
-            max_concurrent 1000
-        }
+        forward . {{ CLUSTER_DNS_FORWARD }}
         cache 30
         reload
         loadbalance

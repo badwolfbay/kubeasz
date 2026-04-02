@@ -101,6 +101,14 @@ spec:
                   fieldPath: metadata.namespace
             - name: CONFIG_MOUNT_PATH
               value: /etc/config/
+      nodeSelector:
+        kubernetes.io/os: linux
+        kubernetes.io/role: master
+      tolerations:
+        - key: "kubernetes.io/role"
+          value: "master"
+          operator: "Equal"
+          effect: NoSchedule                         
       volumes:
         - name: config-volume
           configMap:
