@@ -12,12 +12,12 @@
     - name: 删除旧 calico-etcd-secrets
       shell: "{{ base_dir }}/bin/kubectl -n kube-system delete secrets calico-etcd-secrets || echo NotFound"
 
-    - name: 创建 calico-etcd-secrets
-      shell: "cd {{ cluster_dir }}/ssl && \
-            {{ base_dir }}/bin/kubectl create secret generic -n kube-system calico-etcd-secrets \
-            --from-file=etcd-ca=ca.pem \
-            --from-file=etcd-key=calico-key.pem \
-            --from-file=etcd-cert=calico.pem"
+    # - name: 创建 calico-etcd-secrets
+    #   shell: "cd {{ cluster_dir }}/ssl && \
+    #         {{ base_dir }}/bin/kubectl create secret generic -n kube-system calico-etcd-secrets \
+    #         --from-file=etcd-ca=ca.pem \
+    #         --from-file=etcd-key=calico-key.pem \
+    #         --from-file=etcd-cert=calico.pem"
 
     - name: 配置 calico DaemonSet yaml文件
       template: src=calico-{{ calico_ver_main }}.yaml.j2 dest={{ cluster_dir }}/yml/calico.yaml
