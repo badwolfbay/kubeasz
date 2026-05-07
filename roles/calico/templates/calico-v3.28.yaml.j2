@@ -218,6 +218,8 @@ rules:
       - calico-cni-plugin
     verbs:
       - create
+      # 否则执行calicoctl get node报错
+      - list
   # The CNI plugin needs to get pods, nodes, and namespaces.
   - apiGroups: [""]
     resources:
