@@ -145,6 +145,28 @@ rules:
       - get
       - list
       - watch
+  # 官方文档没有,如果不加,controller报错,权限可能会大
+  - apiGroups: [""]
+    resources:
+      - serviceaccounts
+      - namespaces
+    verbs:
+      - get
+      - list
+      - watch
+  # 官方文档没有,如果不加,controller报错,权限可能会大
+  - apiGroups: 
+      - networking.k8s.io
+      - crd.projectcalico.org
+    resources:
+      - networkpolicies
+    verbs:
+      - get
+      - list
+      - watch 
+      - create
+      - update
+      - delete           
   # IPAM resources are manipulated in response to node and block updates, as well as periodic triggers.
   - apiGroups: ["crd.projectcalico.org"]
     resources:
