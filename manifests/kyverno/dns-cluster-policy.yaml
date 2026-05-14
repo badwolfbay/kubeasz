@@ -1,0 +1,37 @@
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: inject-dns-config
+  annotations:
+    policies.kyverno.io/title: Inject DNS Config for All Pods
+    policies.kyverno.io/category: Network
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/description: >-
+      自动为所有 Pod 注入优化的 DNS 配置，包括 timeout=2 和 single-request-reopen，
+      以缓解 conntrack 竞争导致的 DNS 5秒延迟问题。
+spec:
+  rules:
+    - name: inject-dns-options
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      preconditions:
+        any:
+          - key: "{{ request.object.spec.dnsPolicy || '' }}"
+            operator: AnyIn
+            value:
+              - ClusterFirst
+              - ClusterFirstWithHostNet
+              - None
+      mutate:
+        patchStrategicMerge:
+          spec:
+            dnsConfig:
+              options:
+                - name: timeout
+                  value: "2"
+                - name: single-request-reopen
