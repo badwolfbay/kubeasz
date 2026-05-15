@@ -68,6 +68,12 @@
 - import_tasks: offline.yml
   when: 'INSTALL_SOURCE == "offline"'
 
+- name: 安装基础软件包
+  package:
+    name:
+      - conntrack-tools     # kube-proxy 需要
+    state: present
+
 - name: 临时关闭 selinux
   shell: "setenforce 0"
   failed_when: false
