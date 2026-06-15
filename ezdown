@@ -768,6 +768,7 @@ function start_kubeasz_docker() {
       --name kubeasz \
       --network host \
       --restart always \
+      --privileged \
       --volume "$BASE":"$BASE" \
       --volume /root/.kube:/root/.kube \
       --volume /root/.ssh:/root/.ssh \
